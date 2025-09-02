@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "3001:3000"
+    environment:
+      DB_HOST: host.docker.internal   # Cambia si tu contenedor DB tiene otro hostname o IP
+      DB_NAME: postgres
+      DB_USER: postgres
+      DB_PASS: testing
+      DB_PORT: 5432
+      JWT_SECRET: supersecretkey
+
+  orders-service:
+    build: ./orders-service
+    ports:
+      - "3002:3000"
+    environment:
+      DB_HOST: host.docker.internal
+      DB_NAME: postgres      
+      DB_USER: postgres
+      DB_PASS: testing
+      DB_PORT: 5432
+      JWT_SECRET: supersecretkey
+
+  catalog-service:
+    build: ./catalog-service
+    ports:
+      - "3003:3000"
+    environment:
+      DB_HOST: host.docker.internal
+      DB_NAME: postgres 
+      DB_USER: postgres
+      DB_PASS: testing
+      DB_PORT: 5432
