@@ -111,3 +111,93 @@ docker-compose down --rmi all -v
 }
 ```
 - GET http://localhost:3003/products
+
+---
+
+# AWS
+
+## **ECR**: Elastic Container Registry
+### Repositorio - auth-service-repo
+- **Repository name**: auth-service-repo
+- **Image tag mutability**: Mutable
+- **Mutable tag exclusions**:
+- **Encryption configuration**: AES-256
+- **View push commands**
+
+> [!CAUTION]
+> View push commands from `auth-service-repo`.
+
+### Repositorio - catalog-service-repo
+- **Repository name**: catalog-service-repo
+- **Image tag mutability**: Mutable
+- **Mutable tag exclusions**:
+- **Encryption configuration**: AES-256
+- **View push commands**
+
+> [!CAUTION]
+> View push commands from `catalog-service-repo`.
+
+### Repositorio - orders-service-repo
+- **Repository name**: orders-service-repo
+- **Image tag mutability**: Mutable
+- **Mutable tag exclusions**:
+- **Encryption configuration**: AES-256
+- **View push commands**
+
+> [!CAUTION]
+> View push commands from `orders-service-repo`.
+
+## **CloudShell**:
+- Clone Repository
+```sh
+git clone https://github.com/TheNefelin/AWS_Microservices_Demo_NodeJS.git
+```
+```sh
+cd AWS_Microservices_Demo_NodeJS
+```
+- Build Docker Images
+```sh
+docker build -f auth-service/Dockerfile -t auth-service-repo ./auth-service
+```
+```sh
+auth-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/auth-service-repo:latest
+```
+```sh
+docker build -f catalog-service/Dockerfile -t catalog-service-repo ./catalog-service
+```
+```sh
+catalog-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/catalog-service-repo:latest
+```
+```sh
+docker build -f orders-service/Dockerfile -t orders-service-repo ./orders-service
+```
+```sh
+orders-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/orders-service-repo:latest
+```
+- Login
+```
+aws ecr get-login-password --region [REGION] | docker login --username AWS --password-stdin [YOUR_ACCOUNT_ID].dkr.ecr.us-east-1.amazonaws.com
+```
+- Push to ECR
+```sh
+docker push [YOUR_ACCOUNT_ID].dkr.ecr.us-east-1.amazonaws.com/auth-service-repo:latest
+```
+```sh
+docker push [YOUR_ACCOUNT_ID].dkr.ecr.us-east-1.amazonaws.com/catalog-service-repo:lates
+```
+```sh
+docker push [YOUR_ACCOUNT_ID].dkr.ecr.us-east-1.amazonaws.com/orders-service-repo:lates
+```
+- Clean up
+```sh
+df -h
+docker builder prune -f
+df -h
+df -hclear
+cd ..
+rm -rf AWS_Microservices_Demo_NodeJS
+docker images
+```
+
+527237860774
+us-east-1

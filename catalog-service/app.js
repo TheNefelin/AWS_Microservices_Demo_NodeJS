@@ -14,15 +14,22 @@ const pool = new Pool({
 });
 
 app.get('/', (req, res) => {
-  res.json({ status: 'Healthy', service: 'auth-service' }); // Cambia el nombre del servicio según corresponda
+  res.json({ 
+    status: 'Healthy', 
+    service: 'catalog-service',
+    endpoints: [
+      'GET  - /api/products',
+      'POST - /api/products'
+    ],
+  });
 });
 
-app.get('/products', async (req, res) => {
+app.get('/api/products', async (req, res) => {
   const result = await pool.query('SELECT * FROM products');
   res.json(result.rows);
 });
 
-app.post('/products', async (req, res) => {
+app.post('/api/products', async (req, res) => {
   const { name, price } = req.body;
   await pool.query('INSERT INTO products (name, price) VALUES ($1, $2)', [name, price]);
   res.json({ message: 'Product added' });

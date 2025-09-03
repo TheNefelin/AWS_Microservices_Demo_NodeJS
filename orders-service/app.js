@@ -28,19 +28,26 @@ function authenticate(req, res, next) {
 }
 
 app.get('/', (req, res) => {
-  res.json({ status: 'Healthy', service: 'auth-service' }); // Cambia el nombre del servicio según corresponda
+  res.json({ 
+    status: 'Healthy', 
+    service: 'orders-service',
+    endpoints: [
+      'GET  - /api/orders',
+      'POST - /api/orders'
+    ],
+  });
 });
 
-app.post('/orders', authenticate, async (req, res) => {
+app.get('/api/orders', authenticate, async (req, res) => {
+  const result = await pool.query('SELECT * FROM orders WHERE username=$1', [req.user.username]);
+  res.json(result.rows);
+});
+
+app.post('/api/orders', authenticate, async (req, res) => {
   const { item, quantity } = req.body;
   await pool.query('INSERT INTO orders (username, item, quantity) VALUES ($1, $2, $3)',
     [req.user.username, item, quantity]);
   res.json({ message: 'Order created' });
-});
-
-app.get('/orders', authenticate, async (req, res) => {
-  const result = await pool.query('SELECT * FROM orders WHERE username=$1', [req.user.username]);
-  res.json(result.rows);
 });
 
 app.listen(3000, () => console.log('Orders service running on port 3000'));

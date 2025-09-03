@@ -17,16 +17,23 @@ const pool = new Pool({
 const SECRET = "supersecretkey";
 
 app.get('/', (req, res) => {
-  res.json({ status: 'Healthy', service: 'auth-service' }); // Cambia el nombre del servicio según corresponda
+  res.json({ 
+    status: 'Healthy', 
+    service: 'auth-service',
+    endpoints: [
+      'POST - /api/register',
+      'POST - /api/login'
+    ],
+  });
 });
 
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
   await pool.query('INSERT INTO users (username, password) VALUES ($1, $2)', [username, password]);
   res.json({ message: 'User registered' });
 });
 
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   const result = await pool.query('SELECT * FROM users WHERE username=$1 AND password=$2', [username, password]);
   if (result.rows.length > 0) {
