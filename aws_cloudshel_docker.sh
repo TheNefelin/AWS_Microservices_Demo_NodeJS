@@ -34,3 +34,4 @@ df -h
 cd ..
 rm -rf AWS_Microservices_Demo_NodeJS
 docker images
+# docker rmi auth-service-repo catalog-service-repo orders-service-repo

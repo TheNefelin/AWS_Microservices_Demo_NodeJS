@@ -158,7 +158,12 @@ docker-compose down --rmi all -v
 
 ## **CloudShell**:
 1. Modify aws_cloudshel_docker.sh then add [YOUR_ACCOUNT_ID] and [REGION]
+```sh
+chmod +x build-script.sh
+```
 2. Run aws_cloudshel_docker.sh
-3. [Repo](git clone https://github.com/TheNefelin/AWS_Microservices_Demo_NodeJS.git)
-- Clone Repository
+```sh
+./build-script.sh
+```
+
 
