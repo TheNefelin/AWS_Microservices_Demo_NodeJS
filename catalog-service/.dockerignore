@@ -1,0 +1,23 @@
+# Ignore everything
+*
+
+# But allow these files
+!package.json
+!package-lock.json
+!app.js
+!*.js
+!src/
+!lib/
+
+# Specifically ignore
+.git
+.gitignore
+README.md
+node_modules
+npm-debug.log
+Dockerfile
+.dockerignore
+.env
+.nyc_output
+coverage/
+tests/

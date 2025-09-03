@@ -3,20 +3,29 @@
 ### Projects Structure
 ```
 /microservices-demo
- ├── auth-service
- │    ├── app.js
- │    ├── package.json
- │    └── Dockerfile
- ├── orders-service
- │    ├── app.js (o main.py)
- │    ├── package.json
- │    └── Dockerfile
- ├── catalog-service
- │    ├── app.js (o main.py)
- │    ├── package.json
- │    └── Dockerfile
- ├── docker-compose.yml (para desarrollo local)
- └── README.md
+├── auth-service
+│   ├── .dockerignore
+│   ├── app.js
+│   ├── Dockerfile
+│   ├── package-lock.json 
+│   └── package.json
+├── orders-service
+│   ├── .dockerignore
+│   ├── app.js
+│   ├── Dockerfile
+│   ├── package-lock.json 
+│   └── package.json
+├── catalog-service
+│   ├── .dockerignore
+│   ├── app.js
+│   ├── Dockerfile
+│   ├── package-lock.json 
+│   └── package.json
+├── .gitignore
+├── aws_cloudshel_docker.sh
+├── docker-compose.yml
+├── PostgreSQL.sql
+└── README.md
 ```
 
 ## auth-service
