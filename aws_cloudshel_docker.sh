@@ -12,7 +12,7 @@ auth-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/auth-s
 docker push [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/auth-service-repo:latest
 
 df -h
-docker system prune -a --volumes -f
+docker builder prune -f
 df -h
 
 docker build -f catalog-service/Dockerfile -t catalog-service-repo ./catalog-service
@@ -20,7 +20,7 @@ catalog-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/cat
 docker push [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/catalog-service-repo:latest
 
 df -h
-docker system prune -a --volumes -f
+docker builder prune -f
 df -h
 
 docker build -f orders-service/Dockerfile -t orders-service-repo ./orders-service
@@ -30,7 +30,7 @@ docker push [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/orders-service-repo
 df -h
 docker builder prune -f
 df -h
-df -hclear
+
 cd ..
 rm -rf AWS_Microservices_Demo_NodeJS
 docker images

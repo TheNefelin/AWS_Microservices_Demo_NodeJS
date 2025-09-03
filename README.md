@@ -157,6 +157,10 @@ docker-compose down --rmi all -v
 > View push commands from `orders-service-repo`.
 
 ## **CloudShell**:
+1. Modify aws_cloudshel_docker.sh then add [YOUR_ACCOUNT_ID] and [REGION]
+2. Run aws_cloudshel_docker.sh
+
+
 - Clone Repository
 ```sh
 git clone https://github.com/TheNefelin/AWS_Microservices_Demo_NodeJS.git
