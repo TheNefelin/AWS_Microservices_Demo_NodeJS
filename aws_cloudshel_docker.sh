@@ -1,3 +1,7 @@
+df -h
+docker system prune -a --volumes -f
+df -h
+
 git clone https://github.com/TheNefelin/AWS_Microservices_Demo_NodeJS.git
 cd AWS_Microservices_Demo_NodeJS
 
