@@ -159,58 +159,6 @@ docker-compose down --rmi all -v
 ## **CloudShell**:
 1. Modify aws_cloudshel_docker.sh then add [YOUR_ACCOUNT_ID] and [REGION]
 2. Run aws_cloudshel_docker.sh
-
-
+3. [Repo](git clone https://github.com/TheNefelin/AWS_Microservices_Demo_NodeJS.git)
 - Clone Repository
-```sh
-git clone https://github.com/TheNefelin/AWS_Microservices_Demo_NodeJS.git
-```
-```sh
-cd AWS_Microservices_Demo_NodeJS
-```
-- Build Docker Images
-```sh
-docker build -f auth-service/Dockerfile -t auth-service-repo ./auth-service
-```
-```sh
-auth-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/auth-service-repo:latest
-```
-```sh
-docker build -f catalog-service/Dockerfile -t catalog-service-repo ./catalog-service
-```
-```sh
-catalog-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/catalog-service-repo:latest
-```
-```sh
-docker build -f orders-service/Dockerfile -t orders-service-repo ./orders-service
-```
-```sh
-orders-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/orders-service-repo:latest
-```
-- Login
-```
-aws ecr get-login-password --region [REGION] | docker login --username AWS --password-stdin [YOUR_ACCOUNT_ID].dkr.ecr.us-east-1.amazonaws.com
-```
-- Push to ECR
-```sh
-docker push [YOUR_ACCOUNT_ID].dkr.ecr.us-east-1.amazonaws.com/auth-service-repo:latest
-```
-```sh
-docker push [YOUR_ACCOUNT_ID].dkr.ecr.us-east-1.amazonaws.com/catalog-service-repo:lates
-```
-```sh
-docker push [YOUR_ACCOUNT_ID].dkr.ecr.us-east-1.amazonaws.com/orders-service-repo:lates
-```
-- Clean up
-```sh
-df -h
-docker builder prune -f
-df -h
-df -hclear
-cd ..
-rm -rf AWS_Microservices_Demo_NodeJS
-docker images
-```
 
-527237860774
-us-east-1
