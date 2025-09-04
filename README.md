@@ -343,19 +343,11 @@ kubectl delete secret --all
   - **Integrations**:
     - HTTP
     - Method: POST
-    - URL endpoint: https:// + auth-service-LoadBalancer-External-IP + :3000/api/register 
+    - URL endpoint: https:// + auth-service-LoadBalancer-External-IP + :3000/api/register
   - **Integrations**:
     - HTTP
     - Method: POST
-    - URL endpoint: https:// + auth-service-LoadBalancer-External-IP + :3000/api/login     
-  - **Integrations**:
-    - HTTP
-    - Method: GET
-    - URL endpoint: https:// + products-service-LoadBalancer-External-IP + :3000
-  - **Integrations**:
-    - HTTP
-    - Method: ANY
-    - URL endpoint: https:// + products-service-LoadBalancer-External-IP + :3000/api/products
+    - URL endpoint: https:// + auth-service-LoadBalancer-External-IP + :3000/api/login
   - **Integrations**:
     - HTTP
     - Method: GET
@@ -364,6 +356,14 @@ kubectl delete secret --all
     - HTTP
     - Method: ANY
     - URL endpoint: https:// + orders-service-LoadBalancer-External-IP + :3000/api/orders
+  - **Integrations**:
+    - HTTP
+    - Method: GET
+    - URL endpoint: https:// + products-service-LoadBalancer-External-IP + :3000
+  - **Integrations**:
+    - HTTP
+    - Method: ANY
+    - URL endpoint: https:// + products-service-LoadBalancer-External-IP + :3000/api/products
 - **Configure routes**:
   - Auth
     - **Method**: GET
@@ -371,20 +371,12 @@ kubectl delete secret --all
     - **Integration target**: URL endpoint Auth
   - Auth
     - **Method**: POST
-    - **Resource path**: /api/register 
+    - **Resource path**: /api/register
     - **Integration target**: URL endpoint Auth
   - Auth
     - **Method**: POST
     - **Resource path**: /api/login
     - **Integration target**: URL endpoint Auth
-  - Products
-    - **Method**: GET
-    - **Resource path**: /products
-    - **Integration target**: URL endpoint Products
-  - Products
-    - **Method**: ANY
-    - **Resource path**: /api/products
-    - **Integration target**: URL endpoint Products
   - Orders
     - **Method**: GET
     - **Resource path**: /orders
@@ -393,3 +385,11 @@ kubectl delete secret --all
     - **Method**: ANY
     - **Resource path**: /api/orders
     - **Integration target**: URL endpoint Orders
+  - Products
+    - **Method**: GET
+    - **Resource path**: /products
+    - **Integration target**: URL endpoint Products
+  - Products
+    - **Method**: ANY
+    - **Resource path**: /api/products
+    - **Integration target**: URL endpoint Products

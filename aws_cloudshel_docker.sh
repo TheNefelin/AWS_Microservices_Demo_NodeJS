@@ -6,6 +6,7 @@ YOUR_ACCOUNT_ID=123456789012
 
 df -h
 docker system prune -a --volumes -f
+docker builder prune -f
 df -h
 
 git clone https://github.com/TheNefelin/AWS_Microservices_Demo_NodeJS.git
@@ -24,6 +25,8 @@ docker push ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/orders-service-re
 docker build -f products-service/Dockerfile -t products-service-repo ./products-service
 docker tag products-service-repo:latest ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/products-service-repo:latest
 docker push ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/products-service-repo:latest
+
+cd
 
 aws eks update-kubeconfig --name node-microservices-demo --region ${REGION}
 
