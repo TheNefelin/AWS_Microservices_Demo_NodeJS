@@ -180,50 +180,6 @@ docker-compose down --rmi all -v
     - Destination: 0.0.0.0/0
     - Description:
 
-## **ECR**: Elastic Container Registry
-### Repositorio - auth-service-repo
-- **Repository name**: auth-service-repo
-- **Image tag mutability**: Mutable
-- **Mutable tag exclusions**:
-- **Encryption configuration**: AES-256
-- **View push commands**
-
-> [!CAUTION]
-> View push commands from `auth-service-repo`.
-
-### Repositorio - products-service-repo
-- **Repository name**: products-service-repo
-- **Image tag mutability**: Mutable
-- **Mutable tag exclusions**:
-- **Encryption configuration**: AES-256
-- **View push commands**
-
-> [!CAUTION]
-> View push commands from `products-service-repo`.
-
-### Repositorio - orders-service-repo
-- **Repository name**: orders-service-repo
-- **Image tag mutability**: Mutable
-- **Mutable tag exclusions**:
-- **Encryption configuration**: AES-256
-- **View push commands**
-
-> [!CAUTION]
-> View push commands from `orders-service-repo`.
-
-## **CloudShell**:
-1. Modify aws_cloudshel_docker.sh then add [YOUR_ACCOUNT_ID] and [REGION]
-2. Modify aws-auth-service.yaml, aws-orders-service.yaml, aws-products-service.yaml and add <YOUR_ACCOUNT_ID> <YOUR-RDS-ENDPOINT> <YOUR-RDS-PASSWORD>
-3. Upload aws_cloudshel_docker.sh aws-auth-service.yaml, aws-orders-service.yaml, aws-products-service.yaml files
-4. Add execute permission to aws_cloudshel_docker.sh
-```sh
-chmod +x aws_cloudshel_docker.sh
-```
-5. Run aws_cloudshel_docker.sh
-```sh
-./aws_cloudshel_docker.sh
-```
-
 ## **RDS**: Relational Database Service
 ### PostgreSQL
 - **Creation method**: Standard create
@@ -277,6 +233,88 @@ VALUES
     ('Keyboard', 45.00),
     ('Monitor', 300.00),
     ('Headphones', 75.50);
+```
+
+## **ECR**: Elastic Container Registry
+### Repositorio - auth-service-repo
+- **Repository name**: auth-service-repo
+- **Image tag mutability**: Mutable
+- **Mutable tag exclusions**:
+- **Encryption configuration**: AES-256
+- **View push commands**
+
+> [!CAUTION]
+> View push commands from `auth-service-repo`.
+
+### Repositorio - products-service-repo
+- **Repository name**: products-service-repo
+- **Image tag mutability**: Mutable
+- **Mutable tag exclusions**:
+- **Encryption configuration**: AES-256
+- **View push commands**
+
+> [!CAUTION]
+> View push commands from `products-service-repo`.
+
+### Repositorio - orders-service-repo
+- **Repository name**: orders-service-repo
+- **Image tag mutability**: Mutable
+- **Mutable tag exclusions**:
+- **Encryption configuration**: AES-256
+- **View push commands**
+
+> [!CAUTION]
+> View push commands from `orders-service-repo`.
+
+## **CloudShell**:
+1. Modify aws-auth-service.yaml, aws-orders-service.yaml, aws-products-service.yaml and add <YOUR_ACCOUNT_ID> <YOUR-RDS-ENDPOINT> <YOUR-RDS-PASSWORD>
+2. Open CloudShell
+3. Run Commands
+```sh
+df -h
+docker system prune -a --volumes -f
+docker builder prune -f
+df -h
+```
+```sh
+git clone https://github.com/TheNefelin/AWS_Microservices_Demo_NodeJS.git
+cd AWS_Microservices_Demo_NodeJS
+```
+```sh
+aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com
+
+docker build -f auth-service/Dockerfile -t auth-service-repo ./auth-service
+docker tag auth-service-repo:latest ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/auth-service-repo:latest
+docker push ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/auth-service-repo:latest
+
+docker build -f orders-service/Dockerfile -t orders-service-repo ./orders-service
+docker tag orders-service-repo:latest ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/orders-service-repo:latest
+docker push ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/orders-service-repo:latest
+
+docker build -f products-service/Dockerfile -t products-service-repo ./products-service
+docker tag products-service-repo:latest ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/products-service-repo:latest
+docker push ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/products-service-repo:latest
+
+cd
+```
+```sh
+docker images
+rm -rf AWS_Microservices_Demo_NodeJS
+docker system prune -a --volumes -f
+docker builder prune -f
+```
+
+### Optional
+1. Modify aws_cloudshel_docker.sh then add [YOUR_ACCOUNT_ID] and [REGION]
+2. Modify aws-auth-service.yaml, aws-orders-service.yaml, aws-products-service.yaml and add <YOUR_ACCOUNT_ID> <YOUR-RDS-ENDPOINT> <YOUR-RDS-PASSWORD>
+3. Upload aws_cloudshel_docker.sh aws-auth-service.yaml, aws-orders-service.yaml, aws-products-service.yaml files
+4. Add execute permission to aws_cloudshel_docker.sh
+```sh
+chmod +x aws_cloudshel_docker.sh
+```
+5. Run aws_cloudshel_docker.sh
+```sh
+./aws_cloudshel_docker.sh
 ```
 
 ## **EKS**: Elastic Kubernetes Service

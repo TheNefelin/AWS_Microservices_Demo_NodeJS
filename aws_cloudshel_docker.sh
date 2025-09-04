@@ -42,7 +42,6 @@ df -h
 docker builder prune -f
 df -h
 
-cd ..
 rm -rf AWS_Microservices_Demo_NodeJS
 docker images
 
