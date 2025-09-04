@@ -22,7 +22,7 @@ docker build -f products-service/Dockerfile -t products-service-repo ./products-
 docker tag products-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/products-service-repo:latest
 docker push [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/products-service-repo:latest
 
-aws eks update-kubeconfig --name node-microservices-demo --region <REGION>
+aws eks update-kubeconfig --name node-microservices-demo --region [REGION]
 
 kubectl get nodes
 
