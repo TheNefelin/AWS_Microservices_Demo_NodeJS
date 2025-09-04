@@ -19,7 +19,7 @@ const pool = new Pool({
 app.get('/', (req, res) => {
   res.json({ 
     status: 'Healthy', 
-    service: 'catalog-service',
+    service: 'products-service',
     endpoints: [
       'GET  - /api/products',
       'POST - /api/products'
