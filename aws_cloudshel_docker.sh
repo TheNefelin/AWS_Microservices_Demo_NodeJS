@@ -1,6 +1,9 @@
 # chmod +x aws_cloudshel_docker.sh
 # ./aws_cloudshel_docker.sh
 
+REGION=us-east-1
+YOUR_ACCOUNT_ID=123456789012
+
 df -h
 docker system prune -a --volumes -f
 df -h
@@ -8,21 +11,21 @@ df -h
 git clone https://github.com/TheNefelin/AWS_Microservices_Demo_NodeJS.git
 cd AWS_Microservices_Demo_NodeJS
 
-aws ecr get-login-password --region [REGION] | docker login --username AWS --password-stdin [YOUR_ACCOUNT_ID].dkr.ecr.us-east-1.amazonaws.com
+aws ecr get-login-password --region ${REGION} | docker login --username AWS --password-stdin ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com
 
 docker build -f auth-service/Dockerfile -t auth-service-repo ./auth-service
-docker tag auth-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/auth-service-repo:latest
-docker push [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/auth-service-repo:latest
+docker tag auth-service-repo:latest ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/auth-service-repo:latest
+docker push ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/auth-service-repo:latest
 
 docker build -f orders-service/Dockerfile -t orders-service-repo ./orders-service
-docker tag orders-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/orders-service-repo:latest
-docker push [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/orders-service-repo:latest
+docker tag orders-service-repo:latest ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/orders-service-repo:latest
+docker push ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/orders-service-repo:latest
 
 docker build -f products-service/Dockerfile -t products-service-repo ./products-service
-docker tag products-service-repo:latest [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/products-service-repo:latest
-docker push [YOUR_ACCOUNT_ID].dkr.ecr.[REGION].amazonaws.com/products-service-repo:latest
+docker tag products-service-repo:latest ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/products-service-repo:latest
+docker push ${YOUR_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/products-service-repo:latest
 
-aws eks update-kubeconfig --name node-microservices-demo --region [REGION]
+aws eks update-kubeconfig --name node-microservices-demo --region ${REGION}
 
 kubectl get nodes
 
@@ -31,9 +34,6 @@ kubectl apply -f aws-orders-service.yaml
 kubectl apply -f aws-products-service.yaml
 
 kubectl get all
-# kubectl get pods
-# kubectl get svc
-# kubectl get rs
 
 df -h
 docker builder prune -f

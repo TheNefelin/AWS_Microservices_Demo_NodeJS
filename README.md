@@ -213,7 +213,7 @@ docker-compose down --rmi all -v
 
 ## **CloudShell**:
 1. Modify aws_cloudshel_docker.sh then add [YOUR_ACCOUNT_ID] and [REGION]
-2. Modify aws-auth-service.yaml, aws-orders-service.yaml, aws-products-service.yaml and add [YOUR_ECR_CATALOG_IMAGE] [YOUR-RDS-ENDPOINT]
+2. Modify aws-auth-service.yaml, aws-orders-service.yaml, aws-products-service.yaml and add <YOUR_ACCOUNT_ID> <YOUR-RDS-ENDPOINT> <YOUR-RDS-PASSWORD>
 3. Upload aws_cloudshel_docker.sh aws-auth-service.yaml, aws-orders-service.yaml, aws-products-service.yaml files
 4. Add execute permission to aws_cloudshel_docker.sh
 ```sh
