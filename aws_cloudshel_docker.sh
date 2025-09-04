@@ -46,6 +46,7 @@ docker images
 # kubectl delete all --all
 # kubectl delete configmap --all
 # kubectl delete secret --all
+# docker system prune -a --volumes -f
 
 # =========================================================================
 # docker rmi auth-service-repo products-service-repo orders-service-repo

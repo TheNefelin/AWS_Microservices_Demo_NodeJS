@@ -38,4 +38,4 @@ app.post('/api/products', async (req, res) => {
   res.json({ message: 'Product added' });
 });
 
-app.listen(3001, () => console.log('Catalog service running on port 3000'));
+app.listen(3000, () => console.log('Catalog service running on port 3000'));
