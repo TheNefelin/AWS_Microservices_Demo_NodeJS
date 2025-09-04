@@ -12,6 +12,9 @@ const pool = new Pool({
   database: process.env.DB_NAME  ?? 'postgres',
   password: process.env.DB_PASS ?? 'testing',
   port: process.env.DB_PORT ?? 5432,
+  ssl: {
+    rejectUnauthorized: false
+  }  
 });
 
 const SECRET = "supersecretkey";

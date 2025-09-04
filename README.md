@@ -125,6 +125,61 @@ docker-compose down --rmi all -v
 
 # AWS
 
+- ✔️ 3 repositorios en ECR
+- ✔️ 1 base de datos en RDS PostgreSQL
+- ✔️ 1 cluster en EKS
+- ✔️ 1 node group con 2 nodos
+
+## **Seciruty Group**:
+### node-sg-bastion
+- **Name**: node-sg-service
+- **Description**: Access Node
+- **VPC**: default
+- **Inbound rules**:
+  - SSH
+    - Type: SSH
+    - Protocol: TCP
+    - Port range: 22
+    - Destination type: Anywhere-IPv4
+    - Destination: 0.0.0.0/0
+    - Description: Acceso SSH
+  - HTTP
+    - Type: HTTP
+    - Protocol: TCP
+    - Port range: 80
+    - Destination type: Custom
+    - Destination: postgres-sg-rds
+    - Description: Acceso web
+- **Outbound rules**:
+  - Outbound
+    - Type: All traffic
+    - Protocol: all
+    - Port range: all
+    - Destination type: Custom
+    - Destination: 0.0.0.0/0
+    - Description:
+
+### postgres-sg-rds
+- **Name**: postgres-sg-rds
+- **Description**: Acceso postgreSQL
+- **VPC**: default
+- **Inbound rules**:
+  - PostgreSQL
+    - Type: PostgreSQL
+    - Protocol: TCP
+    - Port range: 5432
+    - Destination type: Custom
+    - Destination: node-sg-service
+    - Description: Acceso PostgreSQL
+- **Outbound rules**:
+  - Outbound
+    - Type: All traffic
+    - Protocol: all
+    - Port range: all
+    - Destination type: Custom
+    - Destination: 0.0.0.0/0
+    - Description:
+
 ## **ECR**: Elastic Container Registry
 ### Repositorio - auth-service-repo
 - **Repository name**: auth-service-repo
@@ -159,11 +214,180 @@ docker-compose down --rmi all -v
 ## **CloudShell**:
 1. Modify aws_cloudshel_docker.sh then add [YOUR_ACCOUNT_ID] and [REGION]
 ```sh
-chmod +x build-script.sh
+chmod +x aws_cloudshel_docker.sh
 ```
 2. Run aws_cloudshel_docker.sh
 ```sh
-./build-script.sh
+./aws_cloudshel_docker.sh
 ```
 
+## **RDS**: Relational Database Service
+### PostgreSQL
+- **Creation method**: Standard create
+- **Engine type**: PostgreSQL
+- **Templates**: Sandbox
+- **Availability and durability**: Single-AZ DB instance deployment (1 instance)
+- **DB instance**: pgdb-rds
+- **Master username**: postgres
+- **Credentials management**: ********
+- **Instance configuration**:
+    - Burstable classes (includes t classes)
+    - db.t3.micro
+- **Allocated storage**: 20 GiB
+- **Enable storage autoscaling**: check
+- **Compute resource**: Don’t connect to an EC2 compute resource
+- **VPC**: default
+- **DB subnet group**: default
+- **Public access**: No
+- **Security groups**: postgres-sg-rds
+- **Monitoring**: Database Insights - Standard
+- **Enhanced Monitoring**: Disabled  
 
+```sql
+-- auth-service
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+-- orders-service
+CREATE TABLE IF NOT EXISTS orders (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    item VARCHAR(100),
+    quantity INT
+);
+
+-- catalog-service
+CREATE TABLE IF NOT EXISTS products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100),
+    price NUMERIC
+);
+
+INSERT INTO products 
+    (name, price)
+VALUES
+    ('Laptop', 1200.50),
+    ('Mouse', 25.99),
+    ('Keyboard', 45.00),
+    ('Monitor', 300.00),
+    ('Headphones', 75.50);
+```
+
+## **EKS**: Elastic Kubernetes Service
+### Clusters
+- **Configuration options**: Custom configuration
+- **Use EKS Auto Mode**_ uncheck
+- **Name**: node-microservices-demo
+- **Cluster IAM role**: LabEksClusterRole
+- **EKS API**: check
+- **ARC Zonal shift**: disabled
+- **VPC**: default
+- **Subnets**: default
+- **Additional security groups**: node-sg-service
+- **Cluster endpoint access**: Public and private
+
+### Clusters - Compute - Add node group
+- **Name**: ng-general
+- **Node IAM role**: LabRole
+- **AMI type**: Amazon Linux 2023 (x86_64)
+- **Instance types**: t3.medium
+- **Disk size**: 20 GiB
+- **Desired size**: 2
+- **Minimum size**: 2
+- **Maximum size**: 4
+- **Subnets** default
+
+### Clusters - Resources - Workload ???
+
+## **CloudShell**:
+### Create .yaml and upload
+- auth-service.yaml
+- orders-service.yaml
+- catalog-service.yaml
+
+### Update Kubernete Config (Connect kubectl to EKS)
+```sh
+aws eks update-kubeconfig --name node-microservices-demo --region <REGION>
+``` 
+```sh
+kubectl get nodes
+```
+```sh
+kubectl apply -f aws-auth-service.yaml
+kubectl apply -f aws-orders-service.yaml
+kubectl apply -f aws-catalog-service.yaml
+```
+```sh
+kubectl get pods
+kubectl get svc
+```
+- optional
+```sh
+kubectl delete deployment auth-service
+kubectl delete deployment orders-service
+kubectl delete deployment catalog-service
+```
+
+## **Api Gateway**:
+### HTTP API - add Clouster - API server endpoint
+- **API name**: node-microservices-demo-api
+  - **Integrations**:
+    - HTTP
+    - Method: GET
+    - URL endpoint: https:// + auth-service-LoadBalancer-External-IP + :3000
+  - **Integrations**:
+    - HTTP
+    - Method: POST
+    - URL endpoint: https:// + auth-service-LoadBalancer-External-IP + :3000/api/register 
+  - **Integrations**:
+    - HTTP
+    - Method: POST
+    - URL endpoint: https:// + auth-service-LoadBalancer-External-IP + :3000/api/login     
+  - **Integrations**:
+    - HTTP
+    - Method: GET
+    - URL endpoint: https:// + catalog-service-LoadBalancer-External-IP + :3000
+  - **Integrations**:
+    - HTTP
+    - Method: ANY
+    - URL endpoint: https:// + catalog-service-LoadBalancer-External-IP + :3000/api/products
+  - **Integrations**:
+    - HTTP
+    - Method: GET
+    - URL endpoint: https:// + orders-service-LoadBalancer-External-IP + :3000
+  - **Integrations**:
+    - HTTP
+    - Method: ANY
+    - URL endpoint: https:// + orders-service-LoadBalancer-External-IP + :3000/api/orders
+- **Configure routes**:
+  - Auth
+    - **Method**: GET
+    - **Resource path**: /auth
+    - **Integration target**: URL endpoint Catalog
+  - Auth
+    - **Method**: POST
+    - **Resource path**: /api/register 
+    - **Integration target**: URL endpoint Catalog
+  - Auth
+    - **Method**: POST
+    - **Resource path**: /api/login
+    - **Integration target**: URL endpoint Catalog
+  - Catalog
+    - **Method**: GET
+    - **Resource path**: /products
+    - **Integration target**: URL endpoint Catalog
+  - Catalog
+    - **Method**: ANY
+    - **Resource path**: /api/products
+    - **Integration target**: URL endpoint Catalog
+  - Orders
+    - **Method**: GET
+    - **Resource path**: /orders
+    - **Integration target**: URL endpoint Catalog
+  - Orders
+    - **Method**: ANY
+    - **Resource path**: /api/orders
+    - **Integration target**: URL endpoint Catalog

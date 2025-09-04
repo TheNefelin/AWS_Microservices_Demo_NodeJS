@@ -19,3 +19,13 @@ CREATE TABLE IF NOT EXISTS products (
     name VARCHAR(100),
     price NUMERIC
 );
+
+INSERT INTO products 
+    (name, price)
+VALUES
+    ('Laptop', 1200.50),
+    ('Mouse', 25.99),
+    ('Keyboard', 45.00),
+    ('Monitor', 300.00),
+    ('Headphones', 75.50);
+    
