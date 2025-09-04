@@ -213,10 +213,13 @@ docker-compose down --rmi all -v
 
 ## **CloudShell**:
 1. Modify aws_cloudshel_docker.sh then add [YOUR_ACCOUNT_ID] and [REGION]
+2. Modify aws-auth-service.yaml, aws-orders-service.yaml, aws-products-service.yaml and add <your_ecr_catalog_image> <your-rds-endpoint>
+3. Upload aws_cloudshel_docker.sh aws-auth-service.yaml, aws-orders-service.yaml, aws-products-service.yaml files
+4. Add execute permission to aws_cloudshel_docker.sh
 ```sh
 chmod +x aws_cloudshel_docker.sh
 ```
-2. Run aws_cloudshel_docker.sh
+5. Run aws_cloudshel_docker.sh
 ```sh
 ./aws_cloudshel_docker.sh
 ```
@@ -321,16 +324,13 @@ kubectl apply -f aws-orders-service.yaml
 kubectl apply -f aws-products-service.yaml
 ```
 ```sh
-kubectl get pods
-kubectl get svc
+kubectl get all
 ```
 - optional
 ```sh
-kubectl delete deployment auth-service
-kubectl delete deployment orders-service
-kubectl delete deployment products-service
-
-kubectl delete pod <pod-name>
+kubectl delete all --all
+kubectl delete configmap --all
+kubectl delete secret --all
 ```
 
 ## **Api Gateway**:

@@ -14,12 +14,12 @@ spec:
     spec:
       containers:
       - name: orders-service
-        image: <tu_ecr_catalog_image>
+        image: <your_ecr_catalog_image>
         ports:
         - containerPort: 3000
         env:
         - name: DB_HOST
-          value: <tu-rds-endpoint>
+          value: <your-rds-endpoint>
         - name: DB_USER
           value: postgres
         - name: DB_NAME
