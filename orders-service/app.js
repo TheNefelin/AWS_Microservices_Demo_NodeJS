@@ -14,7 +14,7 @@ const pool = new Pool({
   port: process.env.DB_PORT ?? 5432,
   ssl: {
     rejectUnauthorized: false
-  }  
+  }
 });
 
 const SECRET = "supersecretkey";

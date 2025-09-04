@@ -15,7 +15,7 @@
 │   ├── Dockerfile
 │   ├── package-lock.json 
 │   └── package.json
-├── catalog-service
+├── products-service
 │   ├── .dockerignore
 │   ├── app.js
 │   ├── Dockerfile
@@ -39,9 +39,9 @@ npm init -y
 npm install express body-parser jsonwebtoken pg
 ```
 
-## catalog-service
+## products-service
 ```sh
-cd catalog-service
+cd products-service
 ```
 ```sh
 npm init -y
@@ -191,15 +191,15 @@ docker-compose down --rmi all -v
 > [!CAUTION]
 > View push commands from `auth-service-repo`.
 
-### Repositorio - catalog-service-repo
-- **Repository name**: catalog-service-repo
+### Repositorio - products-service-repo
+- **Repository name**: products-service-repo
 - **Image tag mutability**: Mutable
 - **Mutable tag exclusions**:
 - **Encryption configuration**: AES-256
 - **View push commands**
 
 > [!CAUTION]
-> View push commands from `catalog-service-repo`.
+> View push commands from `products-service-repo`.
 
 ### Repositorio - orders-service-repo
 - **Repository name**: orders-service-repo
@@ -259,7 +259,7 @@ CREATE TABLE IF NOT EXISTS orders (
     quantity INT
 );
 
--- catalog-service
+-- products-service
 CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100),
@@ -306,7 +306,7 @@ VALUES
 ### Create .yaml and upload
 - auth-service.yaml
 - orders-service.yaml
-- catalog-service.yaml
+- products-service.yaml
 
 ### Update Kubernete Config (Connect kubectl to EKS)
 ```sh
@@ -318,7 +318,7 @@ kubectl get nodes
 ```sh
 kubectl apply -f aws-auth-service.yaml
 kubectl apply -f aws-orders-service.yaml
-kubectl apply -f aws-catalog-service.yaml
+kubectl apply -f aws-products-service.yaml
 ```
 ```sh
 kubectl get pods
@@ -328,7 +328,9 @@ kubectl get svc
 ```sh
 kubectl delete deployment auth-service
 kubectl delete deployment orders-service
-kubectl delete deployment catalog-service
+kubectl delete deployment products-service
+
+kubectl delete pod <pod-name>
 ```
 
 ## **Api Gateway**:
@@ -349,11 +351,11 @@ kubectl delete deployment catalog-service
   - **Integrations**:
     - HTTP
     - Method: GET
-    - URL endpoint: https:// + catalog-service-LoadBalancer-External-IP + :3000
+    - URL endpoint: https:// + products-service-LoadBalancer-External-IP + :3000
   - **Integrations**:
     - HTTP
     - Method: ANY
-    - URL endpoint: https:// + catalog-service-LoadBalancer-External-IP + :3000/api/products
+    - URL endpoint: https:// + products-service-LoadBalancer-External-IP + :3000/api/products
   - **Integrations**:
     - HTTP
     - Method: GET
@@ -366,28 +368,28 @@ kubectl delete deployment catalog-service
   - Auth
     - **Method**: GET
     - **Resource path**: /auth
-    - **Integration target**: URL endpoint Catalog
+    - **Integration target**: URL endpoint Auth
   - Auth
     - **Method**: POST
     - **Resource path**: /api/register 
-    - **Integration target**: URL endpoint Catalog
+    - **Integration target**: URL endpoint Auth
   - Auth
     - **Method**: POST
     - **Resource path**: /api/login
-    - **Integration target**: URL endpoint Catalog
-  - Catalog
+    - **Integration target**: URL endpoint Auth
+  - Products
     - **Method**: GET
     - **Resource path**: /products
-    - **Integration target**: URL endpoint Catalog
-  - Catalog
+    - **Integration target**: URL endpoint Products
+  - Products
     - **Method**: ANY
     - **Resource path**: /api/products
-    - **Integration target**: URL endpoint Catalog
+    - **Integration target**: URL endpoint Products
   - Orders
     - **Method**: GET
     - **Resource path**: /orders
-    - **Integration target**: URL endpoint Catalog
+    - **Integration target**: URL endpoint Orders
   - Orders
     - **Method**: ANY
     - **Resource path**: /api/orders
-    - **Integration target**: URL endpoint Catalog
+    - **Integration target**: URL endpoint Orders

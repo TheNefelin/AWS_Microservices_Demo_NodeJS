@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: catalog-service
+  name: products-service
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: catalog-service
+      app: products-service
   template:
     metadata:
       labels:
-        app: catalog-service
+        app: products-service
     spec:
       containers:
-      - name: catalog-service
-        image: <tu_ecr_catalog_image>
+      - name: products-service
+        image: <tu_ecr_products_image>
         ports:
         - containerPort: 3000
         env:
@@ -32,11 +32,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: catalog-service
+  name: products-service
 spec:
   type: LoadBalancer
   selector:
-    app: catalog-service
+    app: products-service
   ports:
   - port: 3000
     targetPort: 3000

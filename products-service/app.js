@@ -6,10 +6,10 @@ const app = express();
 app.use(bodyParser.json());
 
 const pool = new Pool({
-  host: process.env.DB_HOST ?? 'pgdb-rds.cjqcqq8wblrs.us-east-1.rds.amazonaws.com',
+  host: process.env.DB_HOST ?? 'host.docker.internal', // en ECS apuntarías al RDS endpoint
   user: process.env.DB_USER ?? 'postgres',
   database: process.env.DB_NAME  ?? 'postgres',
-  password: process.env.DB_PASS ?? '!nfra-48-x',
+  password: process.env.DB_PASS ?? 'testing',
   port: process.env.DB_PORT ?? 5432,
   ssl: {
     rejectUnauthorized: false
